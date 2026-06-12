@@ -48,6 +48,9 @@ class MainWindow(QMainWindow):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_graph)
+        self.flow_read_timer = QTimer()
+        self.flow_read_timer.timeout.connect(self.update_actual_flow_display)
+        self.flow_read_timer.start(1000)
 
         main_widget = QWidget()
         main_layout = QGridLayout()
@@ -716,13 +719,6 @@ class MainWindow(QMainWindow):
                             f"{displayed_flow:.3f} L/min"
                         )
 
-                for mfc_number, info in result["flows"].items():
-                    displayed_flow = info["flow_lpm"] if flow_allowed else 0.0
-
-                    self.mfc_config_widgets[mfc_number - 1]["current_flow"].setText(
-                        f"{displayed_flow:.3f} L/min"
-                    )
-
                 step_time_remaining = step["end_time"] - self.current_time
                 minutes = int(step_time_remaining // 60)
                 seconds = int(step_time_remaining % 60)
@@ -752,12 +748,7 @@ class MainWindow(QMainWindow):
 
                 status_text += "\n"
 
-                for mfc_number, info in result["flows"].items():
-                    displayed_flow = info["flow_lpm"] if flow_allowed else 0.0
-                    status_text += (
-                        f"MFC {mfc_number} ({info['gas']}): "
-                        f"{displayed_flow:.3f} L/min\n"
-                    )
+                self.update_actual_flow_display()
 
                 self.instruction_label.setText(status_text)
                 return
@@ -785,13 +776,11 @@ class MainWindow(QMainWindow):
             flow = info["flow_lpm"]
             gas = info["gas"]
 
-            self.mfc_config_widgets[mfc_number - 1]["current_flow"].setText(
-                f"{flow:.3f} L/min"
-            )
-
             self.log_text.append(
                 f"MFC {mfc_number} ({gas}): {flow:.3f} L/min"
             )
+
+        self.update_actual_flow_display()
 
         status_text = (
             "Manual Single Step Active\n\n"
@@ -836,6 +825,32 @@ class MainWindow(QMainWindow):
             flow = info["flow_lpm"]
 
             self.mfc_controller.set_flow(address, flow)
+
+    def update_actual_flow_display(self):
+
+        if not self.mfc_controller.connected:
+            return
+
+        selected_count = self.mfc_selector.currentIndex() + 1
+
+        for i in range(selected_count):
+
+            mfc = self.mfc_config_widgets[i]
+
+            address_text = mfc["address"].currentText()
+
+            if address_text == "N/A":
+                mfc["current_flow"].setText("N/A")
+                continue
+
+            try:
+                measured_flow = self.mfc_controller.read_flow(int(address_text))
+                mfc["current_flow"].setText(
+                    f"{measured_flow:.3f} L/min"
+                )
+
+            except Exception:
+                mfc["current_flow"].setText("Read Error")
 
 
 def run_gui():
