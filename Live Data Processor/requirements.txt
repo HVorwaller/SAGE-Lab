@@ -1,0 +1,3 @@
+PySide6
+matplotlib
+adafruit-circuitpython-sht4x
