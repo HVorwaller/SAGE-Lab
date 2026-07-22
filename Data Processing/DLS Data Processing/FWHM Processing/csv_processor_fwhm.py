@@ -12,6 +12,7 @@ Full Width Half Maximum calculations
     the FWHM value, and the log of the FWHM value in a dictionary for each analysis.
 
 NOTE: This program does not play as well with CSV files with high polydispersity/multiple populations.
+NOTE: The log calculations of this program are very slightly innacurate due to bit truncation errors. For more precise log calculations, use a calculator or excel.
 '''
 
 # Get target folder from user
