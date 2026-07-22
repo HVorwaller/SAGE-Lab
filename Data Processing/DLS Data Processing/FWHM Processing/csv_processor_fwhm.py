@@ -15,8 +15,8 @@ NOTE: This program does not play as well with CSV files with high polydispersity
 '''
 
 # Get target folder from user
-target_folder = "260625_VariedXylene_FirstAttempt" # Debugging - TODO remove line when done!
-# target_folder = input("Type the name of the folder containing CSVs: ")
+print(f"\nPut all of your CSV files in a single folder (within the current directory). This program will read all CSV files in that folder and output the extracted data.\n")
+target_folder = input("Type the name of the folder containing CSVs: ")
 folder_path = Path('.') / target_folder
 
 num_decimals = input(f"Type the number of decimal places to round FWHM and Log(FWHM): ")
