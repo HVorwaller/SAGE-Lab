@@ -19,13 +19,13 @@ print(f"\nPut all of your CSV files in a single folder (within the current direc
 target_folder = input("Type the name of the folder containing CSVs: ")
 folder_path = Path('.') / target_folder
 
-num_decimals = input(f"Type the number of decimal places to round FWHM and Log(FWHM): ")
+num_decimals = input(f"Type the number of decimal places to round FWHM and Log(FWHM) (defaults to 2): ")
 print() # extra line for spacing
 try:
-    num_decimals = int(num_decimals) if num_decimals != None else 3
+    num_decimals = int(num_decimals) if num_decimals != None else 2
 except ValueError:
-    print("Invalid input. Using default value of 3.")
-    num_decimals = 3
+    print("Invalid input. Using default value of 2.")
+    num_decimals = 2
 
 # Safety check
 if folder_path.exists() and folder_path.is_dir():
