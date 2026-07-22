@@ -20,7 +20,7 @@ target_folder = input("Type the name of the folder containing CSVs: ")
 folder_path = Path('.') / target_folder
 
 num_decimals = input(f"Type the number of decimal places to round FWHM and Log(FWHM) (defaults to 2): ")
-print() # extra line for spacing
+print() # Extra line for spacing
 try:
     num_decimals = int(num_decimals) if num_decimals != None else 2
 except ValueError:
@@ -42,11 +42,11 @@ if folder_path.exists() and folder_path.is_dir():
         file_extracted_data = {}
 
         # Read CSV (skip first row)
-        df = pd.read_csv(csv_file, skiprows=1) # this is a table that contains the data from the CSV file, with columns and rows
+        df = pd.read_csv(csv_file, skiprows=1) # This is a table that contains the data from the CSV file, with columns and rows
               
         # Step 1: Find the target columns dynamically.
 
-        data_set_number = 1 # indexes for file_extracted_data dictionary
+        data_set_number = 1 # Indexes for file_extracted_data dictionary
         
         # Loop through the columns by steps of 3 (1, 4, 7, 10...)
         for intensity_col_index in range(1, len(df.columns), 3): # Java equivalent: for (int intensity_col_index = 1; intensity_col_index < df.columns.length; intensity_col_index += 3)
@@ -56,21 +56,21 @@ if folder_path.exists() and folder_path.is_dir():
             Iterate through each row in the intensity column to locate the first row that has the closest intensity to 50
             on the rising edge, the peak, and second row that has the closest intensity to 50 on the falling edge.
             '''
-            intensity_cell_value = None # store value of current cell in intensity column
-            curr_intensity_diff = None # store the absolute difference between the current cell value and 50
+            intensity_cell_value = None # Store value of current cell in intensity column
+            curr_intensity_diff = None # Store the absolute difference between the current cell value and 50
 
-            curr_closest_diff = 100 # store the current closest difference between a cell and 50.
+            curr_closest_diff = 100 # Store the current closest difference between a cell and 50.
                                     # This is initialized to 100 so that the first cell will always
-                                    # be closer to 50 than this initial value.
-            curr_closest_row_index = None # store the row index of the current closest value
+                                    # Be closer to 50 than this initial value.
+            curr_closest_row_index = None # Store the row index of the current closest value
 
-            last_row_index = len(df) - 1 # store the last row index of the intensity column
+            last_row_index = len(df) - 1 # Store the last row index of the intensity column
 
-            diameter_rising = None # store the grain diameter corresponding to the rising edge
-            diameter_peak = None # store the grain diameter corresponding to the peak
-            diameter_falling = None # store the grain diameter corresponding to the falling edge
-            fwhm_value = None # store the calculated fwhm value
-            log_fwhm_value = None # store the log of the calculated fwhm value
+            diameter_rising = None # Store the grain diameter corresponding to the rising edge
+            diameter_peak = None # Store the grain diameter corresponding to the peak
+            diameter_falling = None # Store the grain diameter corresponding to the falling edge
+            fwhm_value = None # Store the calculated fwhm value
+            log_fwhm_value = None # Store the log of the calculated fwhm value
 
             for curr_row_index in range(len(df)):
                 try:
@@ -87,7 +87,7 @@ if folder_path.exists() and folder_path.is_dir():
                     if (intensity_cell_value == 100):
                         diameter_peak = float(df.iloc[curr_row_index, value_col_index]) # Store peak diameter
                         diameter_rising = float(df.iloc[curr_closest_row_index, value_col_index]) # Lock in rising edge diameter now that peak is reached
-                        curr_closest_diff = 100 # reset monitoring to intensity falling edge
+                        curr_closest_diff = 100 # Reset monitoring to intensity falling edge
 
                     # Check if the current row is the last row in the intensity column
                     if (curr_row_index == last_row_index):
@@ -128,9 +128,9 @@ if folder_path.exists() and folder_path.is_dir():
     export_csv = input("\nWould you like to export these results as a CSV file? (y/n): ")
 
     if (export_csv == "y" or export_csv == "Y" or export_csv == "yes" or export_csv == "Yes"):
-        output_rows = [] # list to hold the rows of the output CSV file
+        output_rows = [] # List to hold the rows of the output CSV file
 
-        # turn the nested dictionary into a list of rows for the CSV file
+        # Turn the nested dictionary into a list of rows for the CSV file
         for filename, data_sets in folder_extracted_data.items():
             for label, val in data_sets.items():
                 row = {
